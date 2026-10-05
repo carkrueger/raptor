@@ -47,9 +47,11 @@ Template/sister project: `../last-eichhof` (same structure and tooling).
   `Game` (fixed-step sim at `FRAME_MS`, rendering with interpolation).
 - `src/game/render/`: `terrainView.ts` (scrolling terrain chunks, destructible modules),
   `effects.ts` (particles for the original ANIMS).
-- `src/game/art/`: procedural Canvas2D art: `ships.ts` (unit archetypes per original picture name,
-  `SPECS`; `drawPlayer` = 7 bank frames drawn as a roll: lowered wing short/dark, raised wing wide/lit), `fx.ts` (shots, structures), `icons.ts` (item icons `icon-<t>` + hex pickups
-  `pickup-<t>`, used by shop, HUD strip, drops, mobile nova button), `shop.ts` (`shop-bg`), `briefing.ts` (`brief-<sector>`: mission briefing backdrop per sector, crossfaded by `Hangar.show`), `terrain.ts` (terrain chunks), `textures.ts`
+- `src/game/art/`: procedural Canvas2D art: `ships.ts` (one distinct design per original picture name,
+  `SPECS`: own silhouette per enemy, hull tint by threat (pale fodder, steel fighters, copper light
+  gunships, crimson armored, hazard yellow kamikaze, gunmetal specialists, violet elite); turrets via
+  `turretOf(sides, guns, len, aim?)`; keep new enemies distinguishable from all others in their waves; `drawPlayer` = 7 bank frames drawn as a roll: lowered wing short/dark, raised wing wide/lit), `fx.ts` (shots, structures), `icons.ts` (item icons `icon-<t>` + hex pickups
+  `pickup-<t>`, used by shop, HUD strip, drops, mobile nova button), `shop.ts` (`shop-bg`), `briefing.ts` (`brief-<sector>`: mission briefing room per sector, crossfaded by `Hangar.show`; over it the per-wave `brief-<sector>-<wave>` overlay, `textures.ts briefingTexture`, built on first use: the wave's toughest boss on the scan table + 4 signature enemies on the intel cards, `briefingUnits`: types new to the wave first, then the most frequent; no bonus carriers/critters), `terrain.ts` (terrain chunks), `textures.ts`
   (texture keys, built once in `Boot`).
 - `src/game/i18n/`: EN (default) + DE. `strings.ts` = `STRINGS` (`en`/`de` per key, `{name}` placeholders),
   `i18n.ts` = `t(key, params)`, `setLang` (localStorage `raptor.lang`, also sets `<html lang>` + the `#rotate`
@@ -128,8 +130,9 @@ Template/sister project: `../last-eichhof` (same structure and tooling).
   last save (`reloadPilot`): weapons lost in flight come back. The HUD shows credits earned this run.
   The Hangar back icon is only shown on the shop and launch screens (hangar has an Exit row).
 - Training sector look (`Game.create` `sim`): a holographic simulator instead of a real fight.
-  `buildTrainingTextures` (lazy, first training mission): `ut-<PIC>` hologram target drones (armed ground units = red octagon emplacements with a gun, never the square passive `tstruct-` pads)
-  (`ships.ts drawTrainingUnit`, one shape per unit role), `tstruct-/twreck-` target pads, `sim-*`
+  `buildTrainingTextures` (lazy, first training mission): `ut-<PIC>` hologram target drones (`ships.ts TRAIN_LOOK`: own shape + color per picture, the
+  bullseye takes the unit color; armed ground units = polygon/round `emplacement`s with guns, never
+  the square passive `tstruct-` pads), `tstruct-/twreck-` target pads, `sim-*`
   grid backdrop; `ChunkJob(..., train)` renders the map as a gridded deck; `Effects(..., sim)` uses
   cyan "derez" explosions; banners say SIMULATION. Sim/gameplay is identical to Bravo.
 - Hangar background: `art/hangar.ts` (`hangar-bg`, open bay door = transparent `BAY`); the
@@ -157,7 +160,7 @@ Template/sister project: `../last-eichhof` (same structure and tooling).
   `node scripts/gen_audio.mjs sfx|music [name]`. Needs a native ffmpeg (`FFMPEG_BIN` overrides
   ffmpeg-static). Songs are ~60 s seamless loops (reverb tails wrap), vorbis q2 to stay < 1 MB.
 - `src/review/`: dev-only pages (not in the prod build): `art.html` (all procedural sprites next to
-  `tmp/ref` originals, enemies per mission) and `sounds.html` (new vs archived audio); both share
+  `tmp/ref` originals, enemies per sector wave via `campaign.ts waveMap`: Bravo missions 1-9, Training waves 1-5) and `sounds.html` (new vs archived audio); both share
   the sector/wave filter `filter.ts` (empty = unfiltered).
 - `original_game/dosraptor/`: original DOS source (reference, gitignored).
 
