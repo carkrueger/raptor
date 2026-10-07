@@ -60,6 +60,7 @@ export class GameInput {
   private tapButtons = new Set<string>()
   private wheel = 0
   private cursorHidden = false
+  private flying = false
   private selected: ObjType | null = null
   private readonly scene: Scene
   private shipCenter = { x: 160, y: 176 }
@@ -183,7 +184,8 @@ export class GameInput {
       this.onButton(hit.id)
       return
     }
-    this.toggleAutoFire()
+    // clicks on the start, pause and results panels are menu clicks
+    if (this.flying) this.toggleAutoFire()
   }
 
   /** Game fullscreen (menu), any element fullscreen, or browser F11 (window = screen size). */
@@ -197,6 +199,7 @@ export class GameInput {
 
   /** Hide the system cursor in mouse mode while flying in fullscreen (menus keep it). */
   updateCursor(flying: boolean): void {
+    this.flying = flying
     const hide = this.mouseMode && flying && this.isFullscreen()
     if (hide === this.cursorHidden) return
     this.cursorHidden = hide
