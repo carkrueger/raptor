@@ -628,17 +628,17 @@ export class Game extends Scene {
     const specials = this.specials().map(([, key, t]) => `${key}  ${OBJ_LIB[t]?.name ?? ""}`)
     const mouse = this.input2.mouseMode && !this.isTouch()
     const keyboardLines = [
-      tr("ctl.move", { input: tr("ctl.input.arrows") }),
-      tr("ctl.special", { input: tr("ctl.input.shiftAlt") }),
-      tr("ctl.nova", { input: tr("ctl.input.enter") }),
+      tr("ctl.move"),
+      tr("ctl.special"),
+      tr("ctl.nova"),
       tr("ctl.pause"),
-      tr("ctl.autoFire", { input: tr("ctl.input.space"), state: fire }),
+      tr("ctl.autoFire", { state: fire }),
     ]
     const mouseLines = [
-      tr("ctl.move", { input: tr("ctl.input.mouse") }),
-      tr("ctl.autoFire", { input: tr("ctl.input.leftClick"), state: fire }),
-      tr("ctl.special", { input: tr("ctl.input.wheel") }),
-      tr("ctl.nova", { input: tr("ctl.input.rightClick") }),
+      tr("ctl.mouseMove"),
+      tr("ctl.mouseFire", { state: fire }),
+      tr("ctl.mouseSpecial"),
+      tr("ctl.mouseNova"),
       tr("ctl.pause"),
     ]
     const lines = this.isTouch()
