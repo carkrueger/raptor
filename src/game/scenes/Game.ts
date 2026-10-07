@@ -1,6 +1,6 @@
 // Gameplay: runs the DOS-exact sim at its fixed rate (FRAME_MS) and renders it with the new art,
 // interpolating positions between sim frames.
-import { type GameObjects, Scene } from "phaser"
+import { type GameObjects, Scene, TintModes } from "phaser"
 import { HUD_BAR } from "../art/fx"
 import { buildTrainingTextures } from "../art/textures"
 import { getAudio, WAVE_SONGS } from "../audio/audio"
@@ -57,6 +57,7 @@ const D = {
   terrain: 10,
   groundAnim: 20,
   groundEnemy: 22,
+  shadow: 25,
   airAnim: 30,
   airEnemy: 40,
   shots: 45,
@@ -67,6 +68,10 @@ const D = {
   hud: 90,
   overlay: 100,
 }
+
+/** shadow offset in DOS px: ship height above the ground */
+const SHADOW_DX = 14
+const SHADOW_DY = 34
 
 interface Tracked {
   obj: GameObjects.Image
@@ -465,6 +470,24 @@ export class Game extends Scene {
     )
     if (s.hits < s.lib.hits * 0.3 && w.frame % 4 < 2) t.obj.setTint(0xff9090)
     else t.obj.clearTint()
+    if (!s.groundflag && s.lib.shadow) this.trackShadow(s, frames)
+  }
+
+  /**
+   * SHADOWS.C: flying ships cast a shadow on the ground, offset down-right, so it slides onto the
+   * screen before the ship does (the cue where it enters). Darkened silhouette of the sprite.
+   */
+  private trackShadow(s: Ship, frames: number): void {
+    const t = this.track(
+      `h${s.id}`,
+      `${this.unitPrefix}${s.lib.iname}`,
+      s.curframe % frames,
+      s.x + s.width / 2 + SHADOW_DX,
+      s.y + s.height / 2 + SHADOW_DY,
+      D.shadow,
+    )
+    t.obj.setTint(0x000000).setTintMode(TintModes.FILL)
+    t.obj.setAlpha(0.65).setScale(0.9)
   }
 
   private drawBeams(lerp: (a: number, b: number) => number): void {
