@@ -72,6 +72,10 @@ const D = {
 /** shadow offset in DOS px: ship height above the ground */
 const SHADOW_DX = 14
 const SHADOW_DY = 34
+const SHADOW_LAYERS = [
+  { id: "r", color: 0x8a5cff, alpha: 0.6, scale: 1, depth: 0 },
+  { id: "c", color: 0x0a0418, alpha: 0.8, scale: 0.86, depth: 1 },
+]
 
 interface Tracked {
   obj: GameObjects.Image
@@ -478,16 +482,22 @@ export class Game extends Scene {
    * screen before the ship does (the cue where it enters). Darkened silhouette of the sprite.
    */
   private trackShadow(s: Ship, frames: number): void {
-    const t = this.track(
-      `h${s.id}`,
-      `${this.unitPrefix}${s.lib.iname}`,
-      s.curframe % frames,
-      s.x + s.width / 2 + SHADOW_DX,
-      s.y + s.height / 2 + SHADOW_DY,
-      D.shadow,
-    )
-    t.obj.setTint(0x000000).setTintMode(TintModes.FILL)
-    t.obj.setAlpha(0.65).setScale(0.9)
+    // violet rim under a dark core: visible on dark and on bright terrain alike
+    for (const layer of SHADOW_LAYERS) {
+      const t = this.track(
+        `h${layer.id}${s.id}`,
+        `${this.unitPrefix}${s.lib.iname}`,
+        s.curframe % frames,
+        s.x + s.width / 2 + SHADOW_DX,
+        s.y + s.height / 2 + SHADOW_DY,
+        D.shadow,
+      )
+      t.obj.setTint(layer.color).setTintMode(TintModes.FILL)
+      t.obj
+        .setAlpha(layer.alpha)
+        .setScale(layer.scale)
+        .setDepth(D.shadow + layer.depth)
+    }
   }
 
   private drawBeams(lerp: (a: number, b: number) => number): void {
