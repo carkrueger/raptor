@@ -4,7 +4,7 @@
 // - Touch: drag anywhere (also the letterbox strips) moves a virtual cursor relative to the ship
 //   so the finger never covers it; on-screen buttons from `buttons`.
 // - Mouse (Settings.mouse, off by default): the cursor is the ship target (system cursor stays visible),
-//   left button fires (and taps HUD buttons), right button = nova bomb, wheel = next/previous weapon.
+//   left button toggles auto-fire (and taps HUD buttons), right button = nova bomb, wheel = next/previous weapon.
 // - Auto-fire (Settings.autoFire, default on) fires continuously; when off, fire = a finger on
 //   the screen (touch only; no single-shot key on desktop).
 import type { Input, Scene } from "phaser"
@@ -58,7 +58,6 @@ export class GameInput {
   private pointer: { x: number; y: number } | null = null
   private drag: { id: number; lastX: number; lastY: number } | null = null
   private tapButtons = new Set<string>()
-  private mouseFire = false
   private wheel = 0
   private selected: ObjType | null = null
   private readonly scene: Scene
@@ -181,7 +180,7 @@ export class GameInput {
       this.onButton(hit.id)
       return
     }
-    this.mouseFire = true
+    this.toggleAutoFire()
   }
 
   /** The mouse cursor is the ship target (DOS coords). */
@@ -214,7 +213,6 @@ export class GameInput {
   }
 
   private readonly up = (e: PointerEvent) => {
-    if (e.pointerType === "mouse") this.mouseFire = false
     if (e.pointerId === this.drag?.id) this.drag = null
   }
 
@@ -240,7 +238,7 @@ export class GameInput {
       up: this.isDown("UP", "W"),
       down: this.isDown("DOWN", "S"),
       pointer: this.pointer,
-      fire: this.autoFire || this.mouseFire,
+      fire: this.autoFire,
       cycle: taps.has("cycle") || wheel > 0 || this.isDown("SHIFT"),
       cyclePrev: wheel < 0 || this.isDown("ALT"),
       mega: taps.has("mega") || (!this.enterHeld && this.isDown("ENTER")),

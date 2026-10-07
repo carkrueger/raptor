@@ -213,8 +213,8 @@ export const STRINGS = {
   ),
   "ctl.mouseNova": e("NOVA BOMB    Right click", "NOVA-BOMBE   Rechtsklick"),
   "ctl.mouseFire": e(
-    "FIRE         Left button (auto-fire: {state})",
-    "FEUER        Linke Taste (Autofeuer: {state})",
+    "AUTO-FIRE    Left click: on/off (now {state})",
+    "AUTOFEUER    Linksklick: an/aus (jetzt {state})",
   ),
   "ctl.recharge": e(
     "             not firing recharges the shield",
