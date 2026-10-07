@@ -14,7 +14,7 @@ import { toOgg } from "../../scripts/lib/ogg.mjs"
 import { decodePic, parsePalette, picSize, toRgba } from "./lib/pic.mjs"
 import { encodePng } from "./lib/png.mjs"
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..")
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "../..")
 const SRC = join(ROOT, "original_game/shareware")
 const args = new Set(process.argv.slice(2))
 const onlyData = args.has("--data")
