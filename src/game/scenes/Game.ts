@@ -74,7 +74,7 @@ const SHADOW_DX = 14
 const SHADOW_DY = 34
 const SHADOW_LAYERS = [
   { id: "r", color: 0x8a5cff, alpha: 0.6, scale: 1, depth: 0 },
-  { id: "c", color: 0x0a0418, alpha: 0.8, scale: 0.86, depth: 1 },
+  { id: "c", color: 0x0a0418, alpha: 0.65, scale: 0.86, depth: 1 },
 ]
 
 interface Tracked {
