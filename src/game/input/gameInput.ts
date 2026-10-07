@@ -59,6 +59,7 @@ export class GameInput {
   private drag: { id: number; lastX: number; lastY: number } | null = null
   private tapButtons = new Set<string>()
   private wheel = 0
+  private cursorHidden = false
   private selected: ObjType | null = null
   private readonly scene: Scene
   private shipCenter = { x: 160, y: 176 }
@@ -111,6 +112,7 @@ export class GameInput {
     window.removeEventListener("pointercancel", this.up)
     window.removeEventListener("wheel", this.onWheel)
     window.removeEventListener("contextmenu", this.noMenu)
+    this.scene.input.setDefaultCursor("")
   }
 
   toggleAutoFire(): void {
@@ -181,6 +183,14 @@ export class GameInput {
       return
     }
     this.toggleAutoFire()
+  }
+
+  /** Hide the system cursor in mouse mode while flying in fullscreen (menus keep it). */
+  updateCursor(flying: boolean): void {
+    const hide = this.mouseMode && flying && this.scene.scale.isFullscreen
+    if (hide === this.cursorHidden) return
+    this.cursorHidden = hide
+    this.scene.input.setDefaultCursor(hide ? "none" : "")
   }
 
   /** The mouse cursor is the ship target (DOS coords). */

@@ -296,7 +296,9 @@ export class Game extends Scene {
   }
 
   update(_time: number, delta: number): void {
-    if (!this.world || this.ended) return
+    if (!this.world) return
+    this.input2.updateCursor(!this.paused && !this.waiting && !this.ended)
+    if (this.ended) return
     const bg = (this.scroll * SCALE) / 3
     this.stars[0]?.setTilePosition(0, bg * 0.15)
     this.stars[1]?.setTilePosition(0, bg * 0.3)
