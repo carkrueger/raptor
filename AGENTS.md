@@ -36,7 +36,11 @@ Template/sister project: `../last-eichhof` (same structure and tooling).
   as in `glowText(..., { glow, color })`), consecutive `push()` calls (one `push(a, b)`),
   `await` inside a loop in scripts (sequential steps: `inOrder` promise chain in
   `gen_screen_exports.mjs`, else `Promise.all`), and `TODO` comments (none committed; dated
-  "delete after" migrations get removed once the date passes).
+  "delete after" migrations get removed once the date passes). Large repetitive key->string tables
+  (`data/ep1.ts`, `i18n/strings.ts`) false-positive on new-code duplication (any added entry
+  structurally matches dozens of existing ones): excluded via `sonar.cpd.exclusions` in
+  `.sonarcloud.properties`, not fixable by rewording/reshaping the new lines (duplication is a
+  measure, not a rule issue, so `NOSONAR` comments don't apply to it).
 
 ## Layout
 
