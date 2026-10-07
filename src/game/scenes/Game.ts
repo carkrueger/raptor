@@ -624,6 +624,21 @@ export class Game extends Scene {
   private controlsLines(): string[] {
     const fire = tr(this.input2.autoFire ? "on" : "off")
     const specials = this.specials().map(([, key, t]) => `${key}  ${OBJ_LIB[t]?.name ?? ""}`)
+    const mouse = this.input2.mouseMode && !this.isTouch()
+    const keyboardLines = [
+      tr("ctl.move"),
+      tr("ctl.special"),
+      tr("ctl.nova"),
+      tr("ctl.pause"),
+      tr("ctl.autoFire", { state: fire }),
+    ]
+    const mouseLines = [
+      tr("ctl.mouseMove"),
+      tr("ctl.mouseFire", { state: fire }),
+      tr("ctl.mouseSpecial"),
+      tr("ctl.mouseNova"),
+      tr("ctl.pause"),
+    ]
     const lines = this.isTouch()
       ? [
           tr("ctl.touchSteer"),
@@ -632,13 +647,9 @@ export class Game extends Scene {
           tr("ctl.touchNova"),
           tr("ctl.touchPause"),
         ]
-      : [
-          tr("ctl.move"),
-          tr("ctl.special"),
-          tr("ctl.nova"),
-          tr("ctl.pause"),
-          tr("ctl.autoFire", { state: fire }),
-        ]
+      : mouse
+        ? mouseLines
+        : keyboardLines
     // OBJS_Think: no recharge on hard
     if (this.world.curplr_diff < DIFF_HARD) lines.push(tr("ctl.recharge"))
     if (specials.length) {

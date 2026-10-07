@@ -89,6 +89,7 @@ Template/sister project: `../last-eichhof` (same structure and tooling).
   per `CHARGE_SHIELD` = 48 idle frames (DOS 96), firing pauses the counter (DOS reset it).
   `SPECIAL_KEYS` = number keys for special weapons in shop order (by price, not DOS order; also
   used by the mission briefing and the HUD weapon strip).
+- Mouse control (`Settings.mouse`, Options menu, default off): `GameInput` turns the cursor into the sim `pointer` (ship target), left button fires/taps pause + weapon strip, right click = nova, wheel = next/previous weapon. Mouse events are ignored when off.
 - Hidden god mode: key G in `Game` (`toggleGod`, dev builds only, `import.meta.env.DEV`): `World.god` (DOS `godmode`: no damage, no
   death) and +10000000 CR per activation; stays on for later missions (`session.ts`
   `godMode()`/`setGodMode()`, not saved). Keep it out of the briefing; it is documented in README.
