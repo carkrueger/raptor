@@ -113,6 +113,7 @@ export class GameInput {
     window.removeEventListener("wheel", this.onWheel)
     window.removeEventListener("contextmenu", this.noMenu)
     this.scene.input.setDefaultCursor("")
+    document.body.style.cursor = ""
   }
 
   toggleAutoFire(): void {
@@ -185,12 +186,23 @@ export class GameInput {
     this.toggleAutoFire()
   }
 
+  /** Game fullscreen (menu), any element fullscreen, or browser F11 (window = screen size). */
+  private isFullscreen(): boolean {
+    return (
+      this.scene.scale.isFullscreen ||
+      document.fullscreenElement !== null ||
+      (window.innerWidth >= screen.width - 1 && window.innerHeight >= screen.height - 1)
+    )
+  }
+
   /** Hide the system cursor in mouse mode while flying in fullscreen (menus keep it). */
   updateCursor(flying: boolean): void {
-    const hide = this.mouseMode && flying && this.scene.scale.isFullscreen
+    const hide = this.mouseMode && flying && this.isFullscreen()
     if (hide === this.cursorHidden) return
     this.cursorHidden = hide
     this.scene.input.setDefaultCursor(hide ? "none" : "")
+    // fullscreen target (#app / body) too: the cursor shows the element under it
+    document.body.style.cursor = hide ? "none" : ""
   }
 
   /** The mouse cursor is the ship target (DOS coords). */
